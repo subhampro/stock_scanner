@@ -3,6 +3,8 @@ from fetch_data import fetch_stock_data, get_company_name, fetch_all_tickers
 from plot_chart import plot_candlestick
 from pattern_detection import detect_pattern
 from datetime import datetime
+import base64
+from io import BytesIO
 
 st.set_page_config(
     page_title="Indian Stock Market Screener",
@@ -13,58 +15,41 @@ st.set_page_config(
 )
 
 def load_css():
-    try:
-        # Try multiple possible paths for the CSS file
-        css_paths = [
-            'static/style.css',
-            './static/style.css',
-            '../static/style.css',
-            'style.css'
-        ]
-        
-        css_content = None
-        for path in css_paths:
-            try:
-                with open(path) as f:
-                    css_content = f.read()
-                    break
-            except:
-                continue
-        
-        if css_content:
-            st.markdown(f'<style>{css_content}</style>', unsafe_allow_html=True)
-        else:
-            # Fallback CSS if file is not found
-            fallback_css = """
-            /* Hide Streamlit Default Elements */
-            #MainMenu {visibility: hidden;}
-            header {visibility: hidden;}
-            footer {visibility: hidden;}
-            
-            /* Dark Theme Colors */
-            .stApp {
-                background-color: #0d1117;
-                color: #c9d1d9;
-            }
-            
-            /* Title Styling */
-            h1 {
-                color: #58a6ff;
-                text-align: center;
-                margin-bottom: 2rem;
-            }
-            
-            /* Button Styling */
-            .stButton > button {
-                width: 100%;
-                border-radius: 8px;
-                background: linear-gradient(45deg, #58a6ff, #238636);
-                color: white;
-            }
-            """
-            st.markdown(f'<style>{fallback_css}</style>', unsafe_allow_html=True)
-    except Exception as e:
-        st.warning(f"Could not load custom styles: {str(e)}")
+    css = """
+    /* Hide Streamlit Default Elements */
+    #MainMenu {visibility: hidden;}
+    header {visibility: hidden;}
+    footer {visibility: hidden;}
+    .stDeployButton, div[data-testid="stDecoration"] {display: none;}
+    div.stApp > div[data-testid="stStatusWidget"] {visibility: hidden;}
+    div[data-testid="stToolbar"] {visibility: hidden;}
+
+    /* Dark Theme Colors */
+    .stApp {
+        background-color: #0d1117 !important;
+        color: #c9d1d9 !important;
+    }
+
+    /* Title Styling */
+    h1 {
+        background: linear-gradient(45deg, #58a6ff, #238636);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 2.5em !important;
+        text-align: center;
+        margin-bottom: 2rem !important;
+    }
+
+    /* Button Styling */
+    .stButton > button {
+        width: 100%;
+        border-radius: 8px !important;
+        background: linear-gradient(45deg, #58a6ff, #238636) !important;
+        color: white !important;
+        border: none !important;
+    }
+    """
+    st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 
 def main():
     load_css()
@@ -160,8 +145,8 @@ def main():
         for ticker, company_name, data in st.session_state.matching_stocks:
             with st.expander(f"{company_name} ({ticker})"):
                 st.write(data.tail())
-                plot_candlestick(data, ticker, company_name)
-                st.image('chart.png')
+                img = plot_candlestick(data, ticker, company_name)
+                st.image(img)
     elif st.session_state.stop_scan:
         st.warning("No matching stocks found before scan was stopped")
 
