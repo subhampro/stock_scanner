@@ -93,12 +93,32 @@ def fetch_all_tickers(exchange_filter="NSE"):
 def fetch_stock_data(ticker, interval='1h'):
     try:
         stock = yf.Ticker(ticker)
-        end_date = datetime.now()
-        start_date = end_date - timedelta(days=30)
         
-        # Get real-time data
-        data = stock.history(period="1mo", interval=interval)
+        # Updated interval config with fallback periods
+        interval_config = {
+            '15m': ['5d', '1d'],      
+            '30m': ['1mo', '5d', '1d'],      
+            '1h': ['1mo', '5d', '1d'],
+            '1d': ['6mo', '3mo', '1mo', '5d', '1d', 'ytd', 'max'],
+            '5d': ['2y', '1y', '6mo', '3mo', '1mo', 'ytd', 'max']
+        }
+        
+        periods_to_try = interval_config.get(interval, ['1mo', '5d', '1d'])
+        
+        data = pd.DataFrame()
+        for period in periods_to_try:
+            try:
+                print(f"{ticker}: Attempting period '{period}'")
+                data = stock.history(period=period, interval=interval)
+                if not data.empty:
+                    print(f"{ticker}: Successfully fetched data for period '{period}'")
+                    break
+            except Exception as e:
+                print(f"{ticker}: Failed with period '{period}' - {str(e)}")
+                continue
+                
         if data.empty:
+            print(f"{ticker}: No data available for any time period")
             return pd.DataFrame()
             
         return data

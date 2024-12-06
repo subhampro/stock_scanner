@@ -1,11 +1,19 @@
-import matplotlib
-matplotlib.use('Agg')
-import mplfinance as mpf
-import matplotlib.pyplot as plt
+try:
+    import matplotlib
+    matplotlib.use('Agg')
+    import mplfinance as mpf
+    import matplotlib.pyplot as plt
+except ImportError as e:
+    print(f"Error importing required libraries: {e}")
+    print("Please ensure mplfinance is installed in your virtual environment:")
+    print("1. Activate your virtual environment")
+    print("2. Run: pip install mplfinance")
+    raise
 
 def plot_candlestick(data, ticker, company_name):
     try:
         plt.close('all')
+        
         mpf.plot(data, 
                 type='candle', 
                 style='charles',
