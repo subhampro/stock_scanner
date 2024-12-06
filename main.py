@@ -1,6 +1,15 @@
 import streamlit as st
 
-# Force dark theme
+# Must be the first Streamlit command
+st.set_page_config(
+    page_title="Indian Stock Market Screener",
+    page_icon="📈",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={}
+)
+
+# Theme configuration should come after page config
 st.markdown("""
     <script>
         var elements = window.parent.document.getElementsByTagName('html');
@@ -12,14 +21,6 @@ from fetch_data import fetch_stock_data, get_company_name, fetch_all_tickers
 from plot_chart import plot_candlestick
 from pattern_detection import detect_pattern
 from datetime import datetime
-
-st.set_page_config(
-    page_title="Indian Stock Market Screener",
-    page_icon="📈",
-    layout="wide",
-    initial_sidebar_state="expanded",
-    menu_items={}
-)
 
 def load_css():
     with open('static/style.css') as f:
