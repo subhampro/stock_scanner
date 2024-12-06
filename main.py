@@ -1,6 +1,5 @@
 import streamlit as st
 
-# Must be the first Streamlit command
 st.set_page_config(
     page_title="Indian Stock Market Screener",
     page_icon="📈",
@@ -9,7 +8,6 @@ st.set_page_config(
     menu_items={}
 )
 
-# Theme configuration should come after page config
 st.markdown("""
     <script>
         var elements = window.parent.document.getElementsByTagName('html');
@@ -106,7 +104,6 @@ def main():
                 st.write(f"Error scanning {ticker}: {e}")
                 continue
         
-        # Show results
         total_time = (datetime.now() - start_time).seconds
         if st.session_state.stop_scan:
             st.info(f"Scan stopped after {total_time} seconds. Showing partial results...")
@@ -114,7 +111,6 @@ def main():
             progress_bar.progress(1.0)
             st.success(f"Scan completed in {total_time} seconds!")
     
-    # Always show results if we have any matches (even after stopping)
     if st.session_state.matching_stocks:
         st.success(f"Found {len(st.session_state.matching_stocks)} stocks matching the {pattern} pattern")
         for ticker, company_name, data in st.session_state.matching_stocks:
