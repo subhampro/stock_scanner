@@ -1,7 +1,7 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="Indian Stock Market Screener",
+    page_title="Indian Stock Market Screener by SubhaM",
     page_icon="📈",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -34,7 +34,7 @@ def main():
     def stop_scan():
         st.session_state.stop_scan = True
 
-    st.title("Indian Stock Market Screener")
+    st.title("Indian Stock Market Screener by SubhaM")
     
     col1, col2, col3 = st.columns(3)
     with col1:
