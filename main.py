@@ -1,4 +1,13 @@
 import streamlit as st
+
+# Force dark theme
+st.markdown("""
+    <script>
+        var elements = window.parent.document.getElementsByTagName('html');
+        elements[0].setAttribute('data-theme', 'dark');
+    </script>
+    """, unsafe_allow_html=True)
+
 from fetch_data import fetch_stock_data, get_company_name, fetch_all_tickers
 from plot_chart import plot_candlestick
 from pattern_detection import detect_pattern
