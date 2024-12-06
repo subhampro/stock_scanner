@@ -6,6 +6,8 @@ from datetime import datetime
 import base64
 from io import BytesIO
 
+st.set_option('deprecation.showPyplotGlobalUse', False)
+
 st.set_page_config(
     page_title="Indian Stock Market Screener",
     page_icon="📈",
@@ -16,34 +18,10 @@ st.set_page_config(
 
 def load_css():
     css = """
-    /* Hide Streamlit Default Elements */
-    #MainMenu {visibility: hidden;}
-    header {visibility: hidden;}
-    footer {visibility: hidden;}
-    .stDeployButton, div[data-testid="stDecoration"] {display: none;}
-    div.stApp > div[data-testid="stStatusWidget"] {visibility: hidden;}
-    div[data-testid="stToolbar"] {visibility: hidden;}
-
-    /* Dark Theme Colors */
-    .stApp {
-        background-color: #0d1117 !important;
-        color: #c9d1d9 !important;
-    }
-
-    /* Title Styling */
-    h1 {
-        background: linear-gradient(45deg, #58a6ff, #238636);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-size: 2.5em !important;
-        text-align: center;
-        margin-bottom: 2rem !important;
-    }
-
-    /* Button Styling */
+    .stApp {background-color: #0d1117; color: #c9d1d9;}
+    h1 {color: #58a6ff; text-align: center; margin-bottom: 2rem;}
     .stButton > button {
         width: 100%;
-        border-radius: 8px !important;
         background: linear-gradient(45deg, #58a6ff, #238636) !important;
         color: white !important;
         border: none !important;
@@ -145,8 +123,8 @@ def main():
         for ticker, company_name, data in st.session_state.matching_stocks:
             with st.expander(f"{company_name} ({ticker})"):
                 st.write(data.tail())
-                img = plot_candlestick(data, ticker, company_name)
-                st.image(img)
+                img_bytes = plot_candlestick(data, ticker, company_name)
+                st.image(img_bytes)
     elif st.session_state.stop_scan:
         st.warning("No matching stocks found before scan was stopped")
 
