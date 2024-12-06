@@ -1,24 +1,16 @@
 import streamlit as st
+from fetch_data import fetch_stock_data, get_company_name, fetch_all_tickers
+from plot_chart import plot_candlestick
+from pattern_detection import detect_pattern
+from datetime import datetime
 
 st.set_page_config(
-    page_title="Indian Stock Market Screener by SubhaM",
+    page_title="Indian Stock Market Screener",
     page_icon="📈",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={}
 )
-
-st.markdown("""
-    <script>
-        var elements = window.parent.document.getElementsByTagName('html');
-        elements[0].setAttribute('data-theme', 'dark');
-    </script>
-    """, unsafe_allow_html=True)
-
-from fetch_data import fetch_stock_data, get_company_name, fetch_all_tickers
-from plot_chart import plot_candlestick
-from pattern_detection import detect_pattern
-from datetime import datetime
 
 def load_css():
     with open('static/style.css') as f:
@@ -34,7 +26,7 @@ def main():
     def stop_scan():
         st.session_state.stop_scan = True
 
-    st.title("Indian Stock Market Screener by SubhaM")
+    st.title("Indian Stock Market Screener")
     
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -68,13 +60,16 @@ def main():
         total_stocks = len(tickers)
         st.info(f"Found {total_stocks} stocks to scan. Estimated time: {total_stocks * 2} seconds")
         st.write(f"Scanning for {pattern} pattern...")
-        
 
         st.button("Stop Scan", on_click=stop_scan, key='stop_button')
         
         progress_text = st.empty()
         progress_bar = st.progress(0)
         stats_text = st.empty()
+        
+        results_header = st.empty()
+        
+        results_container = st.container()
         
         start_time = datetime.now()
         stocks_processed = 0
@@ -98,6 +93,14 @@ def main():
                     company_name = get_company_name(ticker)
                     st.session_state.matching_stocks.append((ticker, company_name, data))
                     
+                    results_header.success(f"Found {len(st.session_state.matching_stocks)} stocks matching the {pattern} pattern")
+                    
+                    with results_container:
+                        with st.expander(f"{company_name} ({ticker})", expanded=True):
+                            st.write(data.tail())
+                            plot_candlestick(data, ticker, company_name)
+                            st.image('chart.png')
+                    
                 stocks_processed += 1
                 
             except Exception as e:
@@ -106,13 +109,13 @@ def main():
         
         total_time = (datetime.now() - start_time).seconds
         if st.session_state.stop_scan:
-            st.info(f"Scan stopped after {total_time} seconds. Showing partial results...")
+            st.info(f"Scan stopped after {total_time} seconds. Showing all results...")
         else:
             progress_bar.progress(1.0)
             st.success(f"Scan completed in {total_time} seconds!")
-    
+
     if st.session_state.matching_stocks:
-        st.success(f"Found {len(st.session_state.matching_stocks)} stocks matching the {pattern} pattern")
+        st.header("All Matching Stocks")
         for ticker, company_name, data in st.session_state.matching_stocks:
             with st.expander(f"{company_name} ({ticker})"):
                 st.write(data.tail())
