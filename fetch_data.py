@@ -24,8 +24,48 @@ def get_all_nse_stocks():
     except:
         return []
 
+def get_nifty50_stocks():
+    try:
+        urls = [
+            "https://archives.nseindia.com/content/indices/ind_nifty50list.csv",
+            "https://www1.nseindia.com/content/indices/ind_nifty50list.csv"
+        ]
+        
+        for url in urls:
+            try:
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                }
+                df = pd.read_csv(url, headers=headers)
+                if not df.empty:
+                    return [f"{symbol}.NS" for symbol in df['Symbol'].tolist()]
+            except:
+                continue
+        
+        # Fallback list of Nifty 50 stocks if unable to fetch
+        return [
+            "ADANIENT.NS", "ADANIPORTS.NS", "APOLLOHOSP.NS", "ASIANPAINT.NS",
+            "AXISBANK.NS", "BAJAJ-AUTO.NS", "BAJAJFINSV.NS", "BAJFINANCE.NS",
+            "BHARTIARTL.NS", "BPCL.NS", "BEL.NS", "BRITANNIA.NS",
+            "CIPLA.NS", "COALINDIA.NS", "DRREDDY.NS", "EICHERMOT.NS",
+            "GRASIM.NS", "HCLTECH.NS", "HDFCBANK.NS", "HDFCLIFE.NS",
+            "HEROMOTOCO.NS", "HINDALCO.NS", "HINDUNILVR.NS", "ICICIBANK.NS",
+            "INDUSINDBK.NS", "INFY.NS", "ITC.NS", "JSWSTEEL.NS",
+            "KOTAKBANK.NS", "LT.NS", "M&M.NS", "MARUTI.NS", 
+            "NESTLEIND.NS", "NTPC.NS", "ONGC.NS", "POWERGRID.NS",
+            "RELIANCE.NS", "SBILIFE.NS", "SBIN.NS", "SHRIRAMFIN.NS",
+            "SUNPHARMA.NS", "TATACONSUM.NS", "TATAMOTORS.NS", "TATASTEEL.NS",
+            "TCS.NS", "TECHM.NS", "TITAN.NS", "TRENT.NS", "ULTRACEMCO.NS",
+            "WIPRO.NS"
+        ]
+    except:
+        return []
+
 def fetch_all_tickers(exchange_filter="NSE"):
     try:
+        if exchange_filter.upper() == "NIFTY50":
+            return get_nifty50_stocks()
+            
         url = "https://query1.finance.yahoo.com/v1/finance/screener/predefined/saved"
         params = {
             "formatted": "true",
@@ -53,7 +93,7 @@ def fetch_all_tickers(exchange_filter="NSE"):
             
             if exchange_filter.upper() == "NSE":
                 stocks = [q['symbol'] for q in quotes if '.NS' in q['symbol'] and not any(x in q['symbol'] for x in ['NIFTY', 'SENSEX', 'BANKNIFTY'])]
-            else:  # ALL
+            else:
                 stocks = [q['symbol'] for q in quotes if '.NS' in q['symbol'] or '.BO' in q['symbol']]
 
         if len(stocks) < 100 and exchange_filter.upper() == "NSE":
@@ -62,6 +102,8 @@ def fetch_all_tickers(exchange_filter="NSE"):
                 return nse_stocks
         
         return stocks if stocks else [
+            # Old Data Not Available
+            "ACMESOLAR.NS",
             # New Age Tech & Digital
             "ZOMATO.NS", "NYKAA.NS", "PAYTM.NS", "DELHIVERY.NS",
             # IT & Software
@@ -88,16 +130,17 @@ def fetch_all_tickers(exchange_filter="NSE"):
         if exchange_filter.upper() == "NSE":
             nse_stocks = get_all_nse_stocks()
             return nse_stocks if nse_stocks else []
+        elif exchange_filter.upper() == "NIFTY50":
+            return get_nifty50_stocks()
         return []
 
 def fetch_stock_data(ticker, interval='1h'):
     try:
         stock = yf.Ticker(ticker)
         
-        # Updated interval config with fallback periods
         interval_config = {
             '15m': ['5d', '1d'],      
-            '30m': ['1mo', '5d', '1d'],      
+            '30m': ['5d', '5d', '1d'],      
             '1h': ['1mo', '5d', '1d'],
             '1d': ['6mo', '3mo', '1mo', '5d', '1d', 'ytd', 'max'],
             '5d': ['2y', '1y', '6mo', '3mo', '1mo', 'ytd', 'max']
@@ -106,25 +149,35 @@ def fetch_stock_data(ticker, interval='1h'):
         periods_to_try = interval_config.get(interval, ['1mo', '5d', '1d'])
         
         data = pd.DataFrame()
+        period_errors = []
+        has_period_issues = False
+        
         for period in periods_to_try:
             try:
-                print(f"{ticker}: Attempting period '{period}'")
-                data = stock.history(period=period, interval=interval)
-                if not data.empty:
-                    print(f"{ticker}: Successfully fetched data for period '{period}'")
+                temp_data = stock.history(period=period, interval=interval)
+                if not temp_data.empty:
+                    data = temp_data
+                    if period != periods_to_try[0]:
+                        has_period_issues = True
                     break
             except Exception as e:
-                print(f"{ticker}: Failed with period '{period}' - {str(e)}")
+                error_str = str(e)
+                period_errors.append(f"Period '{period}': {error_str}")
+                if "Period" in error_str and "is invalid" in error_str:
+                    has_period_issues = True
                 continue
-                
+        
+        if period_errors:
+            has_period_issues = True
+        
         if data.empty:
-            print(f"{ticker}: No data available for any time period")
-            return pd.DataFrame()
+            return pd.DataFrame(), has_period_issues
             
-        return data
+        return data, has_period_issues
+
     except Exception as e:
         print(f"Error fetching data for {ticker}: {e}")
-        return pd.DataFrame()
+        return pd.DataFrame(), False
 
 def get_company_name(ticker):
     try:
