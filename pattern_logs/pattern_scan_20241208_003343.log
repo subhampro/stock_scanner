@@ -1,0 +1,16 @@
+
+==================================================
+Ticker: HDFCBANK.NS
+Conditions Met: 5 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Low Volume Consolidation
+✓ Ema Proximity
+✓ Reversal Level
+
+Failed Conditions:
+✗ Volatility Impulse
+
+Timestamp: 2024-12-08 00:33:43

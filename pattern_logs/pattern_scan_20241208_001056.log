@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: SIS.NS
+Conditions Met: 4 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Low Volume Consolidation
+✓ Ema Proximity
+
+Failed Conditions:
+✗ Volatility Impulse
+✗ Reversal Level
+
+Timestamp: 2024-12-08 00:10:56
+
+==================================================
+Ticker: SITINET.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Low Volume Consolidation
+✓ Ema Proximity
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Volatility Impulse
+✗ Reversal Level
+
+Timestamp: 2024-12-08 00:10:56

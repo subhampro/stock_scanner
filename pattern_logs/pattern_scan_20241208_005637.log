@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: CGPOWER.NS
+Conditions Met: 5 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+✓ Ema Proximity
+
+Failed Conditions:
+✗ Reversal Level
+
+Timestamp: 2024-12-08 00:56:37
+
+==================================================
+Ticker: CHALET.NS
+Conditions Met: 5 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+✓ Ema Proximity
+✓ Reversal Level
+
+Failed Conditions:
+✗ Low Volume Consolidation
+
+Timestamp: 2024-12-08 00:56:37

@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: JKTYRE.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-08 01:18:19
+
+==================================================
+Ticker: JLHL.NS
+Conditions Met: 5 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+✓ Reversal Level
+
+Failed Conditions:
+✗ Ema Proximity
+
+Timestamp: 2024-12-08 01:18:19

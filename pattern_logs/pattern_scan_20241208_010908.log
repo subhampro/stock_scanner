@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: ABFRL.NS
+Conditions Met: 4 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+
+Failed Conditions:
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-08 01:09:08
+
+==================================================
+Ticker: ABINFRA.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+✓ Reversal Level
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Low Volume Consolidation
+✗ Ema Proximity
+
+Timestamp: 2024-12-08 01:09:08

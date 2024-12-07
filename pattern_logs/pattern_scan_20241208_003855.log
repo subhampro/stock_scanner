@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: NARMADA.NS
+Conditions Met: 4 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+✓ Ema Proximity
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Reversal Level
+
+Timestamp: 2024-12-08 00:38:55
+
+==================================================
+Ticker: NATCOPHARM.NS
+Conditions Met: 4 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+✓ Ema Proximity
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Reversal Level
+
+Timestamp: 2024-12-08 00:38:55

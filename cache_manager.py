@@ -34,7 +34,7 @@ class CacheManager:
         ist = pytz.timezone('Asia/Kolkata')
         now = datetime.now(ist)
         next_day = now + timedelta(days=1)
-        next_expiry = next_day.replace(hour=9, minute=15, second=0, microsecond=0)
+        next_expiry = next_day.replace(hour=16, minute=0, second=0, microsecond=0)  # Changed to 4 PM (16:00)
         return next_expiry
 
     def is_cache_valid(self, cache_data):
@@ -114,33 +114,40 @@ class CacheManager:
             return None
 
     def save_progress_to_cache(self, pattern, interval, exchange, processed_stocks, matching_stocks, stocks_with_issues, total_stocks):
-        cache_key = self.get_cache_key(pattern, interval, exchange)
-        progress_file = os.path.join(self.cache_dir, f"{cache_key}_progress.json")
+        try:
+            # Ensure processed stocks don't exceed total stocks
+            processed_set = set(processed_stocks)
+            total_stocks = max(total_stocks, len(processed_set))
+            
+            cache_key = self.get_cache_key(pattern, interval, exchange)
+            progress_file = os.path.join(self.cache_dir, f"{cache_key}_progress.json")
 
-        progress_data = {
-            'last_update': datetime.now(pytz.UTC).isoformat(),
-            'total_stocks': total_stocks,
-            'processed_stocks': list(processed_stocks),
-            'matching_stocks': [
-                {
-                    'ticker': ticker,
-                    'company_name': company_name,
-                    'data': data.to_json()
-                }
-                for ticker, company_name, data in matching_stocks
-            ],
-            'stocks_with_issues': [
-                {
-                    'ticker': ticker,
-                    'company_name': company_name,
-                    'data': data.to_json()
-                }
-                for ticker, company_name, data in stocks_with_issues
-            ]
-        }
+            progress_data = {
+                'last_update': datetime.now(pytz.UTC).isoformat(),
+                'total_stocks': total_stocks,
+                'processed_stocks': list(processed_set),  # Convert to list for JSON serialization
+                'matching_stocks': [
+                    {
+                        'ticker': ticker,
+                        'company_name': company_name,
+                        'data': data.to_json()
+                    }
+                    for ticker, company_name, data in matching_stocks
+                ],
+                'stocks_with_issues': [
+                    {
+                        'ticker': ticker,
+                        'company_name': company_name,
+                        'data': data.to_json()
+                    }
+                    for ticker, company_name, data in stocks_with_issues
+                ]
+            }
 
-        with open(progress_file, 'w') as f:
-            json.dump(progress_data, f)
+            with open(progress_file, 'w') as f:
+                json.dump(progress_data, f)
+        except Exception as e:
+            print(f"Error saving progress: {e}")
 
     def get_progress_from_cache(self, pattern, interval, exchange):
         cache_key = self.get_cache_key(pattern, interval, exchange)
@@ -185,11 +192,15 @@ class CacheManager:
                 for stock in progress_data['stocks_with_issues']
             ]
 
+            # Ensure we don't have duplicate processed stocks
+            processed_stocks = set(progress_data['processed_stocks'])
+            total_stocks = max(progress_data['total_stocks'], len(processed_stocks))
+
             return {
-                'processed_stocks': set(progress_data['processed_stocks']),
+                'processed_stocks': processed_stocks,
                 'matching_stocks': matching_stocks,
                 'stocks_with_issues': stocks_with_issues,
-                'total_stocks': progress_data['total_stocks']
+                'total_stocks': total_stocks
             }
 
         except Exception as e:
@@ -200,8 +211,119 @@ class CacheManager:
     def clear_progress_cache(self, pattern, interval, exchange):
         try:
             cache_key = self.get_cache_key(pattern, interval, exchange)
-            progress_file = os.path.join(self.cache_dir, f"{cache_key}_progress.json")
-            if os.path.exists(progress_file):
-                os.remove(progress_file)
+            for suffix in ['_progress.json', '_final.json']:
+                cache_file = os.path.join(self.cache_dir, f"{cache_key}{suffix}")
+                if os.path.exists(cache_file):
+                    os.remove(cache_file)
         except Exception as e:
             print(f"Error clearing cache: {e}")
+
+    def save_final_results(self, pattern, interval, exchange, matching_stocks, stocks_with_issues, total_stocks):
+        try:
+            cache_key = self.get_cache_key(pattern, interval, exchange)
+            results_file = os.path.join(self.cache_dir, f"{cache_key}_final.json")
+            
+            total_stocks = max(total_stocks, 
+                             len([t for t, _, _ in matching_stocks]) + 
+                             len([t for t, _, _ in stocks_with_issues]))
+            
+            results_data = {
+                'timestamp': datetime.now(pytz.UTC).isoformat(),
+                'total_stocks': total_stocks,
+                'matching_stocks': [
+                    {
+                        'ticker': ticker,
+                        'company_name': company_name,
+                        'data': data.to_json()
+                    }
+                    for ticker, company_name, data in matching_stocks
+                ],
+                'stocks_with_issues': [
+                    {
+                        'ticker': ticker,
+                        'company_name': company_name,
+                        'data': data.to_json()
+                    }
+                    for ticker, company_name, data in stocks_with_issues
+                ]
+            }
+            
+            if not os.path.exists(self.cache_dir):
+                os.makedirs(self.cache_dir)
+            
+            temp_file = os.path.join(self.cache_dir, f"{cache_key}_final.tmp")
+            with open(temp_file, 'w') as f:
+                json.dump(results_data, f)
+            
+            os.replace(temp_file, results_file)
+            
+            self.clear_progress_cache(pattern, interval, exchange)
+            
+        except Exception as e:
+            print(f"Error saving final results: {e}")
+            if os.path.exists(temp_file):
+                os.remove(temp_file)
+
+    def get_final_results(self, pattern, interval, exchange):
+        try:
+            cache_key = self.get_cache_key(pattern, interval, exchange)
+            results_file = os.path.join(self.cache_dir, f"{cache_key}_final.json")
+            
+            if not os.path.exists(results_file):
+                return None
+                
+            with open(results_file, 'r') as f:
+                results_data = json.load(f)
+
+            required_keys = ['timestamp', 'total_stocks', 'matching_stocks', 'stocks_with_issues']
+            if not all(key in results_data for key in required_keys):
+                os.remove(results_file)
+                return None
+                
+            timestamp = datetime.fromisoformat(results_data['timestamp'])
+            if (datetime.now(pytz.UTC) - timestamp) > timedelta(hours=12):
+                os.remove(results_file)
+                return None
+                
+            try:
+                matching_stocks = [
+                    (
+                        stock['ticker'],
+                        stock['company_name'],
+                        pd.read_json(StringIO(stock['data']))
+                    )
+                    for stock in results_data['matching_stocks']
+                ]
+                
+                stocks_with_issues = [
+                    (
+                        stock['ticker'],
+                        stock['company_name'],
+                        pd.read_json(StringIO(stock['data']))
+                    )
+                    for stock in results_data['stocks_with_issues']
+                ]
+                
+                return {
+                    'matching_stocks': matching_stocks,
+                    'stocks_with_issues': stocks_with_issues,
+                    'total_stocks': results_data['total_stocks']
+                }
+            except Exception:
+                os.remove(results_file)
+                return None
+                
+        except Exception as e:
+            print(f"Error reading final results: {e}")
+            return None
+
+    def clear_progress_cache(self, pattern, interval, exchange):
+        try:
+            cache_key = self.get_cache_key(pattern, interval, exchange)
+            progress_file = os.path.join(self.cache_dir, f"{cache_key}_progress.json")
+            
+            if os.path.exists(progress_file):
+                os.remove(progress_file)
+                
+        except Exception as e:
+            print(f"Error clearing progress cache: {e}")

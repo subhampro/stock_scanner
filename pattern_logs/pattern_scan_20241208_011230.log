@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: CGCL.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+
+Failed Conditions:
+✗ Low Volume Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-08 01:12:30
+
+==================================================
+Ticker: CGPOWER.NS
+Conditions Met: 5 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+✓ Ema Proximity
+
+Failed Conditions:
+✗ Reversal Level
+
+Timestamp: 2024-12-08 01:12:30

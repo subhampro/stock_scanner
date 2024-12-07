@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: FOSECOIND.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+✓ Ema Proximity
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Low Volume Consolidation
+✗ Reversal Level
+
+Timestamp: 2024-12-08 00:32:14
+
+==================================================
+Ticker: FSL.NS
+Conditions Met: 4 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+✓ Ema Proximity
+✓ Reversal Level
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Low Volume Consolidation
+
+Timestamp: 2024-12-08 00:32:14

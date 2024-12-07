@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: CONSOFINVT.NS
+Conditions Met: 5 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+✓ Ema Proximity
+
+Failed Conditions:
+✗ Reversal Level
+
+Timestamp: 2024-12-08 00:30:03
+
+==================================================
+Ticker: CONTROLPR.NS
+Conditions Met: 4 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+
+Failed Conditions:
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-08 00:30:03

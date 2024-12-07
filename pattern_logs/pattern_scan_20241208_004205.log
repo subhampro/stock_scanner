@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: RAMCOCEM.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Reversal Level
+
+Failed Conditions:
+✗ Volatility Impulse
+✗ Low Volume Consolidation
+✗ Ema Proximity
+
+Timestamp: 2024-12-08 00:42:05
+
+==================================================
+Ticker: RAMCOIND.NS
+Conditions Met: 4 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+✓ Reversal Level
+
+Failed Conditions:
+✗ Low Volume Consolidation
+✗ Ema Proximity
+
+Timestamp: 2024-12-08 00:42:05

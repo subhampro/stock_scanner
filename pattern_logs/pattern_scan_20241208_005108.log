@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: WOCKPHARMA.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+✓ Reversal Level
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Low Volume Consolidation
+✗ Ema Proximity
+
+Timestamp: 2024-12-08 00:51:08
+
+==================================================
+Ticker: WONDERLA.NS
+Conditions Met: 4 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+✓ Reversal Level
+
+Failed Conditions:
+✗ Low Volume Consolidation
+✗ Ema Proximity
+
+Timestamp: 2024-12-08 00:51:08

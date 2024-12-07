@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: ARVINDFASN.NS
+Conditions Met: 4 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+
+Failed Conditions:
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-07 23:51:27
+
+==================================================
+Ticker: ARVSMART.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+✓ Reversal Level
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Low Volume Consolidation
+✗ Ema Proximity
+
+Timestamp: 2024-12-07 23:51:27

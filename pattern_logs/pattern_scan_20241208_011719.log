@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: INDIAGLYCO.NS
+Conditions Met: 2 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Low Volume Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-08 01:17:19
+
+==================================================
+Ticker: INDIAMART.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-08 01:17:19

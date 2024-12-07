@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: GSPL.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+
+Failed Conditions:
+✗ Low Volume Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-08 01:15:57
+
+==================================================
+Ticker: GSS.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+
+Failed Conditions:
+✗ Low Volume Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-08 01:15:57

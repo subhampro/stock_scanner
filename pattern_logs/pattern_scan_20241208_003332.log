@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: HAL.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+
+Failed Conditions:
+✗ Low Volume Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-08 00:33:32
+
+==================================================
+Ticker: HAPPSTMNDS.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Low Volume Consolidation
+
+Failed Conditions:
+✗ Volatility Impulse
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-08 00:33:32

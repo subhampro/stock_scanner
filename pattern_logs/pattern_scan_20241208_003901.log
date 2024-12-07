@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: NAZARA.NS
+Conditions Met: 2 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Low Volume Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-08 00:39:01
+
+==================================================
+Ticker: NBCC.NS
+Conditions Met: 2 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Low Volume Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-08 00:39:01

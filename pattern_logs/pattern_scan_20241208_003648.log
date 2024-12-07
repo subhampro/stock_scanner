@@ -1,0 +1,16 @@
+
+==================================================
+Ticker: KRSNAA.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+✓ Reversal Level
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Low Volume Consolidation
+✗ Ema Proximity
+
+Timestamp: 2024-12-08 00:36:48

@@ -1,0 +1,30 @@
+
+==================================================
+Ticker: APOLLOHOSP.NS
+Conditions Met: 6 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+✓ Ema Proximity
+✓ Reversal Level
+
+Timestamp: 2024-12-08 00:53:35
+
+==================================================
+Ticker: APOLLOPIPE.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+
+Failed Conditions:
+✗ Low Volume Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-08 00:53:35

@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: SAKSOFT.NS
+Conditions Met: 2 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Low Volume Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-08 00:09:39
+
+==================================================
+Ticker: SAKUMA.NS
+Conditions Met: 2 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Low Volume Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-08 00:09:39
