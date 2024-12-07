@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: ALKYLAMINE.NS
+Conditions Met: 4 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+
+Failed Conditions:
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-07 23:23:44
+
+==================================================
+Ticker: ALLCARGO.NS
+Conditions Met: 4 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+
+Failed Conditions:
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-07 23:23:44

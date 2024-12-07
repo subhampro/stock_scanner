@@ -1,0 +1,16 @@
+
+==================================================
+Ticker: EXIDEIND.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-07 23:28:51

@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: CENTUM.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+
+Failed Conditions:
+✗ Low Volume Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-07 23:13:14
+
+==================================================
+Ticker: CENTURYPLY.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+
+Failed Conditions:
+✗ Low Volume Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-07 23:13:14

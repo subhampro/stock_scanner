@@ -1,0 +1,16 @@
+
+==================================================
+Ticker: CHOICEIN.NS
+Conditions Met: 5 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+✓ Ema Proximity
+✓ Reversal Level
+
+Failed Conditions:
+✗ Tight Consolidation
+
+Timestamp: 2024-12-07 23:26:42

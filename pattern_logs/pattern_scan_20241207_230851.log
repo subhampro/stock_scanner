@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: BOSCHLTD.NS
+Conditions Met: 5 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+✓ Ema Proximity
+
+Failed Conditions:
+✗ Reversal Level
+
+Timestamp: 2024-12-07 23:08:51
+
+==================================================
+Ticker: BPCL.NS
+Conditions Met: 4 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+
+Failed Conditions:
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-07 23:08:51

@@ -28,6 +28,7 @@ def main():
     # Initialize session state
     if 'should_reset' not in st.session_state:
         st.session_state.should_reset = False
+        st.session_state.total_stocks = 0
         
     # Reset all states if should_reset is True
     if st.session_state.should_reset:
@@ -35,6 +36,7 @@ def main():
         st.session_state.stocks_with_issues = []
         st.session_state.stop_scan = False
         st.session_state.scanning = False
+        st.session_state.total_stocks = 0
         st.session_state.should_reset = False
         st.session_state.form_data = {
             'pattern': 'Volatility Contraction',
@@ -42,7 +44,6 @@ def main():
             'exchange': 'NSE'
         }
     
-    # Initialize other session states if they don't exist
     if 'matching_stocks' not in st.session_state:
         st.session_state.matching_stocks = []
     if 'stocks_with_issues' not in st.session_state:
@@ -62,7 +63,6 @@ def main():
         st.session_state.stop_scan = True
         st.session_state.scanning = False
 
-    # Replace new_search function with this:
     def trigger_reset():
         st.session_state.should_reset = True
 
@@ -104,27 +104,21 @@ def main():
         interval = st.session_state.form_data['interval']
         exchange = st.session_state.form_data['exchange']
 
-        # Check cache first
-        cached_data = cache_manager.get_from_cache(pattern, interval, exchange)
-        if cached_data:
-            st.session_state.matching_stocks, st.session_state.stocks_with_issues = cached_data
-            st.session_state.scanning = False
-            st.rerun()
-        
-        # If no cache, proceed with scanning
-        st.session_state.matching_stocks = []
-        st.session_state.stocks_with_issues = []
-        st.session_state.stop_scan = False
-        
         tickers = fetch_all_tickers(exchange)
         if not tickers:
             st.error("Unable to fetch stock list. Please try again later.")
             return
-            
-        total_stocks = len(tickers)
-        start_time = datetime.now()
-        stocks_processed = 0
+
+        progress_data = cache_manager.get_progress_from_cache(pattern, interval, exchange)
         
+        if progress_data and not st.session_state.should_reset:
+            processed_stocks = progress_data['processed_stocks']
+            st.session_state.matching_stocks = progress_data['matching_stocks']
+            st.session_state.stocks_with_issues = progress_data['stocks_with_issues']
+            total_stocks = progress_data['total_stocks']
+            stocks_processed = len(processed_stocks)
+            initial_progress = stocks_processed / total_stocks
+            
         scan_container = st.container()
         with scan_container:
             st.markdown("""
@@ -156,6 +150,7 @@ def main():
             progress_container = st.empty()
             stats_container = st.empty()
             stop_button_container = st.empty()
+            resume_info = st.empty()
             results_container = st.container()
             results_header = st.empty()
             fetched_header = st.empty()
@@ -166,18 +161,69 @@ def main():
                 on_click=stop_scan,
                 type="primary"
             )
+
+            if progress_data and not st.session_state.should_reset:
+                resume_info.info(f"Resuming scan from {stocks_processed} previously processed stocks ({initial_progress:.1%})")
+                if st.session_state.matching_stocks:
+                    with results_container:
+                        st.success(f"Found {len(st.session_state.matching_stocks)} stocks matching the {pattern} pattern")
+                        for ticker, company_name, data in st.session_state.matching_stocks:
+                            with st.expander(f"{company_name} ({ticker}) - Pattern Match", expanded=False):
+                                col1, col2 = st.columns([4, 1])
+                                with col1:
+                                    st.write(data.tail())
+                                with col2:
+                                    st.markdown(
+                                        f'<a href="{get_tradingview_url(ticker)}" target="_blank" class="tradingview-button">'
+                                        '📊 TradingView</a>',
+                                        unsafe_allow_html=True
+                                    )
+                                plot_candlestick(data, ticker, company_name)
+                                st.image('chart.png')
             
             st.markdown('</div>', unsafe_allow_html=True)
+
+        if progress_data and not st.session_state.should_reset:
+            tickers = [t for t in tickers if t not in processed_stocks]
+        else:
+            processed_stocks = set()
+            total_stocks = len(tickers)
+            st.session_state.matching_stocks = []
+            st.session_state.stocks_with_issues = []
+            stocks_processed = 0
+            initial_progress = 0
+
+        if not progress_data or st.session_state.should_reset:
+            st.session_state.total_stocks = len(tickers)
+        else:
+            st.session_state.total_stocks = progress_data['total_stocks']
+
+        start_time = datetime.now()
         
         try:
             for i, ticker in enumerate(tickers):
                 if st.session_state.stop_scan:
-                    st.warning(f"Scan stopped by user after processing {i} stocks")
+                    st.warning(f"Scan stopped by user after processing {stocks_processed} stocks")
                     break
+
+                processed_stocks.add(ticker)
+                current_total_processed = stocks_processed + i + 1
+                progress = current_total_processed / st.session_state.total_stocks 
                 
-                progress = (i + 1) / total_stocks
+                if i % 10 == 0 or st.session_state.stop_scan:
+                    cache_manager.save_progress_to_cache(
+                        pattern,
+                        interval,
+                        exchange,
+                        processed_stocks,
+                        st.session_state.matching_stocks,
+                        st.session_state.stocks_with_issues,
+                        total_stocks
+                    )
+
                 elapsed_time = (datetime.now() - start_time).seconds
-                eta = int((elapsed_time / (i + 1)) * (total_stocks - i - 1)) if i > 0 else 0
+                remaining_stocks = total_stocks - current_total_processed
+                eta = int((elapsed_time / (i + 1)) * remaining_stocks) if i > 0 else 0
                 
                 progress_container.markdown(f"""
                     <div class="scan-progress">
@@ -189,11 +235,11 @@ def main():
                     <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-label">Progress</div>
-                            <div class="stat-value">{progress*100:.1f}%</div>
+                            <div class="stat-value">{min(progress*100, 100):.1f}%</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-label">Stocks Scanned</div>
-                            <div class="stat-value">{i+1}/{total_stocks}</div>
+                            <div class="stat-value">{current_total_processed}/{st.session_state.total_stocks}</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-label">Time Elapsed</div>
@@ -201,7 +247,7 @@ def main():
                         </div>
                         <div class="stat-card">
                             <div class="stat-label">ETA</div>
-                            <div class="stat-value">{eta}s</div>
+                            <div class="stat-value">{max(0, eta)}s</div>
                         </div>
                     </div>
                 """, unsafe_allow_html=True)
@@ -234,17 +280,21 @@ def main():
                 
                 stocks_processed += 1
             
-            # Save to cache if scan completed successfully
             if not st.session_state.stop_scan:
-                cache_manager.save_to_cache(
+                cache_manager.clear_progress_cache(pattern, interval, exchange)
+                
+        finally:
+            if st.session_state.stop_scan:
+                cache_manager.save_progress_to_cache(
                     pattern,
                     interval,
                     exchange,
+                    processed_stocks,
                     st.session_state.matching_stocks,
-                    st.session_state.stocks_with_issues
+                    st.session_state.stocks_with_issues,
+                    total_stocks
                 )
-                
-        finally:
+
             progress_container.empty()
             stats_container.empty()
             stop_button_container.empty()

@@ -1,0 +1,32 @@
+
+==================================================
+Ticker: ALMONDZ.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Volatility Impulse
+✓ Low Volume Consolidation
+
+Failed Conditions:
+✗ Tight Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-07 22:57:57
+
+==================================================
+Ticker: ALOKINDS.NS
+Conditions Met: 3 of 6
+
+Successful Conditions:
+✓ Sample Size
+✓ Tight Consolidation
+✓ Volatility Impulse
+
+Failed Conditions:
+✗ Low Volume Consolidation
+✗ Ema Proximity
+✗ Reversal Level
+
+Timestamp: 2024-12-07 22:57:57
