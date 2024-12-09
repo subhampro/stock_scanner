@@ -15,12 +15,10 @@ def log_pattern_result(ticker, conditions_met, met_conditions, failed_conditions
     global TOTAL_STOCKS_SCANNED
     TOTAL_STOCKS_SCANNED += 1
     
-    # Create base log directory
     log_dir = "pattern_logs"
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
     
-    # Create unique scan folder
     scan_folder = get_scan_folder_name(pattern_type, interval, exchange)
     scan_dir = os.path.join(log_dir, scan_folder)
     if not os.path.exists(scan_dir):
@@ -29,7 +27,6 @@ def log_pattern_result(ticker, conditions_met, met_conditions, failed_conditions
     log_file = os.path.join(scan_dir, "pattern_scan.log")
     summary_file = os.path.join(scan_dir, "pattern_summary.txt")
     
-    # Append to daily log file
     with open(log_file, "a", encoding='utf-8') as f:
         f.write(f"\n{'='*50}\n")
         f.write(f"Ticker: {ticker}\n")
@@ -44,11 +41,9 @@ def log_pattern_result(ticker, conditions_met, met_conditions, failed_conditions
             for cond in failed_conditions:
                 f.write(f"✗ {cond.replace('_', ' ').title()}\n")
     
-    # Update summary after each stock scan
     update_summary_report(summary_file, ticker, len(met_conditions), pattern_type, interval, exchange)
 
 def update_summary_report(summary_file, ticker, conditions_met_count, pattern_type=None, interval=None, exchange=None):
-    # Read existing summary if it exists
     summary_data = {2: [], 3: [], 4: [], 5: [], 6: []}
     
     if os.path.exists(summary_file):
@@ -61,14 +56,12 @@ def update_summary_report(summary_file, ticker, conditions_met_count, pattern_ty
                     ticker_name = line.strip("- \n")
                     summary_data[current_section].append(ticker_name)
     
-    # Update with new ticker
     if conditions_met_count >= 2:
         for count in summary_data:
             if ticker in summary_data[count]:
                 summary_data[count].remove(ticker)
         summary_data[conditions_met_count].append(ticker)
     
-    # Read the log file for condition analysis
     log_dir = "pattern_logs"
     timestamp = datetime.now().strftime("%Y%m%d")
     log_file = os.path.join(log_dir, f"pattern_scan_{timestamp}.log")
@@ -82,7 +75,6 @@ def update_summary_report(summary_file, ticker, conditions_met_count, pattern_ty
         "reversal_level": {'success': 0, 'failed': 0}
     }
     
-    # Analyze all logs for condition statistics
     if os.path.exists(log_file):
         with open(log_file, 'r', encoding='utf-8') as f:
             reading_success = False
@@ -105,7 +97,6 @@ def update_summary_report(summary_file, ticker, conditions_met_count, pattern_ty
                     if condition in condition_stats:
                         condition_stats[condition]['failed'] += 1
 
-    # Write updated summary with full analysis
     with open(summary_file, 'w', encoding='utf-8') as f:
         f.write(f"Pattern Scan Summary Report - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         f.write("="*50 + "\n\n")
@@ -133,7 +124,6 @@ def update_summary_report(summary_file, ticker, conditions_met_count, pattern_ty
         f.write(f"\nTotal Stocks Scanned: {TOTAL_STOCKS_SCANNED}\n")
         f.write(f"Stocks Meeting 2+ Conditions: {sum(len(stocks) for stocks in summary_data.values())}\n\n")
         
-        # Write stocks by conditions met
         for count in reversed(range(2, 7)):
             stocks = sorted(summary_data[count])
             if stocks:
@@ -192,8 +182,8 @@ def detect_pattern(data, pattern_type="Volatility Contraction", ticker="Unknown"
                 "ema_proximity": False
             }
             
-            last_120_candles = data.tail(120).copy()  # Changed from 126 to 120
-            if len(last_120_candles) >= 120:  # Changed from 126 to 120
+            last_120_candles = data.tail(120).copy()  
+            if len(last_120_candles) >= 120: 
                 conditions_met["sample_size"] = True
             else:
                 print(f"{ticker}: Failed - Insufficient candles ({len(last_120_candles)})")
@@ -201,7 +191,6 @@ def detect_pattern(data, pattern_type="Volatility Contraction", ticker="Unknown"
             
             last_120_candles['EMA20'] = last_120_candles['Close'].ewm(span=20, adjust=False).mean()
             
-            # Update all references from last_126_candles to last_120_candles
             first_45_candles = last_120_candles.head(45)
             consolidation_range = (first_45_candles['High'].max() - first_45_candles['Low'].min()) / first_45_candles['Close'].mean()
             if 0.05 <= consolidation_range <= 0.25:
@@ -264,8 +253,8 @@ def detect_pattern(data, pattern_type="Volatility Contraction", ticker="Unknown"
                 "reversal_level": False
             }
             
-            last_120_candles = data.tail(120).copy()  # Changed from 126 to 120
-            if len(last_120_candles) >= 120:  # Changed from 126 to 120
+            last_120_candles = data.tail(120).copy() 
+            if len(last_120_candles) >= 120:  
                 conditions_met["sample_size"] = True
             else:
                 print(f"{ticker}: Failed - Insufficient candles ({len(last_120_candles)})")
@@ -273,7 +262,6 @@ def detect_pattern(data, pattern_type="Volatility Contraction", ticker="Unknown"
             
             last_120_candles['EMA20'] = last_120_candles['Close'].ewm(span=20, adjust=False).mean()
             
-            # Update all references from last_126_candles to last_120_candles
             first_45_candles = last_120_candles.head(45)
             consolidation_range = (first_45_candles['High'].max() - first_45_candles['Low'].min()) / first_45_candles['Close'].mean()
             if 0.05 <= consolidation_range <= 0.25:
@@ -315,7 +303,7 @@ def detect_pattern(data, pattern_type="Volatility Contraction", ticker="Unknown"
             first_100_candles = last_120_candles.head(100)
             top_high = first_100_candles['High'].max()
             
-            reversal_percentage = 0.15  # Can be modified to any value between 0.15-0.20
+            reversal_percentage = 0.15
             reversal_level = top_high * (1 - reversal_percentage)
             
             last_30_candles = last_120_candles.tail(30)
@@ -372,7 +360,6 @@ def generate_summary_report():
         
     current_time = datetime.now()
     
-    # Find the most recent scan folder
     scan_folders = []
     for folder in os.listdir(log_dir):
         folder_path = os.path.join(log_dir, folder)
@@ -384,7 +371,6 @@ def generate_summary_report():
     if not scan_folders:
         return
     
-    # Use the most recent scan folder
     latest_scan_dir = max(scan_folders, key=os.path.getctime)
     log_file = os.path.join(latest_scan_dir, "pattern_scan.log")
     summary_file = os.path.join(latest_scan_dir, "pattern_summary.txt")
@@ -436,7 +422,6 @@ def generate_summary_report():
         f.write(f"Pattern Scan Summary Report - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         f.write("="*50 + "\n\n")
         
-        # Add pattern type detection from logs
         pattern_type = None
         for log_file in log_files:
             with open(log_file, 'r', encoding='utf-8') as log:

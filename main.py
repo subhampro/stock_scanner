@@ -224,16 +224,13 @@ def main():
             
             st.markdown('</div>', unsafe_allow_html=True)
 
-        # Add total_processed counter to session state
         if 'total_processed' not in st.session_state:
             st.session_state.total_processed = 0
 
-        # Add resume_start_time to track elapsed time for resumed scans
         if 'resume_start_time' not in st.session_state:
             st.session_state.resume_start_time = datetime.now()
             st.session_state.initial_processed = 0
 
-        # Reset counter when starting fresh
         if not progress_data or st.session_state.should_reset:
             st.session_state.total_processed = 0
             processed_stocks = set()
@@ -244,7 +241,6 @@ def main():
             st.session_state.resume_start_time = datetime.now()
             st.session_state.initial_processed = 0
         else:
-            # Use cached progress data
             processed_stocks = progress_data['processed_stocks']
             st.session_state.total_processed = len(processed_stocks)
             st.session_state.total_stocks = progress_data['total_stocks']
@@ -253,13 +249,11 @@ def main():
             if 'initial_processed' not in st.session_state:
                 st.session_state.initial_processed = stocks_processed
 
-        # Filter out already processed stocks
         if progress_data and not st.session_state.should_reset:
             tickers = [t for t in tickers if t not in processed_stocks]
 
         start_time = datetime.now()
         
-        # Check for final results first
         final_results = None if st.session_state.should_reset else cache_manager.get_final_results(pattern, interval, exchange)
         if final_results:
             st.session_state.matching_stocks = final_results['matching_stocks']
@@ -356,7 +350,6 @@ def main():
                 stocks_processed += 1
             
             if not st.session_state.stop_scan and st.session_state.total_processed >= st.session_state.total_stocks:
-                # Save final results when scan completes
                 cache_manager.save_final_results(
                     pattern,
                     interval,

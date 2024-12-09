@@ -41,8 +41,6 @@ def get_nifty50_stocks():
                     return [f"{symbol}.NS" for symbol in df['Symbol'].tolist()]
             except:
                 continue
-        
-        # Fallback list of Nifty 50 stocks if unable to fetch
         return [
             "ADANIENT.NS", "ADANIPORTS.NS", "APOLLOHOSP.NS", "ASIANPAINT.NS",
             "AXISBANK.NS", "BAJAJ-AUTO.NS", "BAJAJFINSV.NS", "BAJFINANCE.NS",
